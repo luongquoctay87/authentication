@@ -20,7 +20,7 @@ spec:
       containers:
         - name: auth
           image: luongquoctay87/auth:latest
-          imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           resources:
             requests:
               memory: "300Mi"
