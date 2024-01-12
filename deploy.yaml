@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: auth
-          image: auth:xxx
+          image: luongquoctay87/auth:latest
           imagePullPolicy: Never
           resources:
             requests:
