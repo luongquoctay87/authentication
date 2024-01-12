@@ -1,0 +1,40 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: authentication-service
+  profiles:
+    active: @spring.profiles.active@
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+# Health check
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+  prometheus:
+    metrics:
+      export:
+        step: 5s
+        enabled: true
+
+# Logging
+logging:
+  level:
+    root: INFO
+    web: OFF
+    org.springframework: OFF
+    org.apache: OFF
+    kafka: OFF

@@ -1,0 +1,38 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  devtools:
+    add-properties: true
+  jpa:
+    # Provide database platform that is being used
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      # New database is created when app starts and destroyed when app stops
+      ddl-auto: create-drop
+    # Show sql when spring data jpa performs query
+    show-sql: true
+    properties:
+      hibernate:
+        # Format queries
+        format_sql: true
+  datasource:
+    # URL connection to database (spring-security is database name)
+    url: jdbc:h2:mem:spring-security
+    # H2 SQL driver dependency
+    driver-class-name: org.h2.Driver
+    username: root
+    password: 12345
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+openapi:
+  service:
+    api-docs: authentication-service
+    server: ${AUTH_ENDPOINT:http://localhost:81}
+    title: Authentication Service
+    version: 1.0
+
