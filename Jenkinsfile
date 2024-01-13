@@ -4,7 +4,10 @@ pipeline {
         maven 'MAVEN'
     }
     environment {
-        imageName = 'luongquoctay87/auth'
+        dockerHub = "luongquoctay87"
+        repository = "auth"
+        tag = "1.0.0-${BUILD_NUMBER}"
+        imageName = "${dockerHub}/${repository}:${tag}"
     }
     stages {
         stage('GitSCM') {
@@ -14,7 +17,7 @@ pipeline {
         }
         stage('Build Maven') {
             steps {
-                sh 'mvn clean package -Pdev'
+                sh 'mvn clean package -P dev'
             }
         }
         stage('Build Image') {
@@ -25,9 +28,10 @@ pipeline {
         stage('Push image to DockerHub') {
             steps {
                 withCredentials([string(credentialsId: 'Dockerhub', variable: 'dockerhub_pwd')]) {
-                    sh 'docker login -u luongquoctay87 -p ${dockerhub_pwd}'
+                    sh 'docker login -u ${dockerHub} -p ${dockerhub_pwd}'
                 }
                 sh 'docker push ${imageName}'
+                sh 'docker push ${dockerHub}/${repository}:latest'
             }
         }
         stage('Deploy to K8s') {
