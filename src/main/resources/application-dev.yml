@@ -11,7 +11,7 @@ spring:
       # New database is created when app starts and destroyed when app stops
       ddl-auto: create-drop
     # Show sql when spring data jpa performs query
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         # Format queries
