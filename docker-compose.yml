@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+
+  auth-service:
+    container_name: auth-service
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - '8081:8081'
+    volumes:
+      - /tmp:/workspace/logs
+  elastic-search:
+    image: elasticsearch:7.14.1
+    container_name: elasticsearch
+    restart: always
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node
+  kibana:
+    image: kibana:7.14.1
+    container_name: kibana
+    restart: always
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elastic-search:9200
+  logstash:
+    image: logstash:7.14.1
+    container_name: logstash
+    restart: always
+    ports:
+      - "5044:5044"
+    volumes:
+      - /tmp:/workspace/logs
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    environment:
+      - LOG_PATH=/workspace/logs
+      - XPACK_MONITORING_ELASTICSEARCH_HOSTS=http://elastic-search:9200
+      - XPACK_MONITORING_ENABLED=true
+
+networks:
+  default:
+    name: auth-network
