@@ -7,10 +7,13 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
+    environment:
+      - LOGSTASH_HOST=logstash:5600
     ports:
       - '8081:8081'
-    volumes:
-      - /tmp:/workspace/logs
+    depends_on:
+      logstash:
+        condition: service_started
   elastic-search:
     image: elasticsearch:7.14.1
     container_name: elasticsearch
@@ -32,12 +35,12 @@ services:
     container_name: logstash
     restart: always
     ports:
+      - "5600:5600" # Socket port
       - "5044:5044"
+#      - "9600:9600"
     volumes:
-      - /tmp:/workspace/logs
       - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     environment:
-      - LOG_PATH=/workspace/logs
       - XPACK_MONITORING_ELASTICSEARCH_HOSTS=http://elastic-search:9200
       - XPACK_MONITORING_ENABLED=true
 
