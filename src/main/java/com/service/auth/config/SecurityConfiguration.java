@@ -43,7 +43,7 @@ public class SecurityConfiguration {
     public WebSecurityCustomizer ignoreResources() {
         return (webSecurity) -> webSecurity
                 .ignoring()
-                .requestMatchers("/actuator", "/v3/**","/webjars/**", "/swagger-ui*/*swagger-initializer.js","/swagger-ui*/**");
+                .requestMatchers("/actuator/**", "/v3/**","/webjars/**", "/swagger-ui*/*swagger-initializer.js","/swagger-ui*/**");
     }
 
     @Bean
