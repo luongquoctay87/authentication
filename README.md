@@ -16,3 +16,4 @@ Code base for authentication service
 - H2 Database
 - OpenAPI 2.2.0
 - Dockerfile
+- Logging and Monitoring

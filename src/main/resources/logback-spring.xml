@@ -1,9 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <!-- Print log to auth-service.log -->
+    <springProfile name="dev">
+        <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d [%thread] %-5level %-50logger{40} - %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>auth-service.log</file>
+            <encoder>
+                <pattern>%d [%thread] %-5level %-50logger{40} - %msg%n</pattern>
+            </encoder>
+
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>auth-service-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <maxFileSize>1MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>10MB</totalSizeCap>
+                <cleanHistoryOnStart>true</cleanHistoryOnStart>
+            </rollingPolicy>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="Console" />
+            <appender-ref ref="RollingFile" />
+        </root>
+    </springProfile>
+
+    <!-- Send log to logstash via socket -->
+    <springProfile name="test,prod">
     <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <!-- <destination>localhost:5600</destination>--> <!--local env-->
-        <destination>${LOGSTASH_HOST:-localhost:5600}</destination> <!--docker env-->
+        <destination>${LOGSTASH_HOST:-localhost:5600}</destination>
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
                 <mdc/>
@@ -27,4 +59,5 @@
     <root level="info">
         <appender-ref ref="logstash"/>
     </root>
+    </springProfile>
 </configuration>
