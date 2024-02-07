@@ -25,7 +25,6 @@ public class AuthenticationController {
 
     @PostMapping("/sign-up")
     public ResponseEntity<TokenResponse> signUp(@RequestBody SignUpRequest request) {
-        log.info("Sign UP ===========================================>");
         return ResponseEntity.ok(authenticationService.signUp(request));
     }
 
